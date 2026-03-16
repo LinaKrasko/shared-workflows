@@ -14,6 +14,8 @@ if not diff.strip():
     print("No diff found, skipping review.")
     exit(0)
 
+print(f"Diff size: {len(diff)} characters")
+
 # Truncate if too large (Claude has a context limit)
 MAX_DIFF_CHARS = 15000
 if len(diff) > MAX_DIFF_CHARS:
@@ -100,7 +102,9 @@ response = requests.post(
     }
 )
 
-if response.status_code == 200:
+print(f"GitHub API response: {response.status_code}")
+if response.status_code in (200, 201):
     print("Review posted successfully.")
 else:
     print(f"GitHub API error {response.status_code}: {response.text}")
+    exit(1)
