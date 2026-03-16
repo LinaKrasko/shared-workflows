@@ -30,11 +30,12 @@ message = client.messages.create(
 Each comment must have exactly these fields:
 - "path": the file path (string)
 - "line": the line number in the file (integer)
-- "severity": one of "error", "warning", "suggestion"
-- "body": your review comment explaining the issue and how to fix it
+- "severity": one of "error", "warning", "suggestion", "praise"
+- "body": your review comment
 
 Rules:
-- Only comment on real issues — bugs, security problems, performance, bad practices
+- Comment on real issues — bugs, security problems, performance, bad practices
+- Also add "praise" comments for good catches, meaningful bug fixes, and well-done refactoring
 - Do not comment on formatting or style unless it causes a real problem
 - Be specific and constructive, not generic
 - Return ONLY the raw JSON array, no markdown, no explanation, no backticks""",
