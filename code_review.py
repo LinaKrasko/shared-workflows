@@ -55,10 +55,6 @@ except json.JSONDecodeError:
     print(raw)
     exit(0)
 
-if not comments:
-    print("Claude found no issues.")
-    exit(0)
-
 print(f"Claude found {len(comments)} comment(s).")
 
 # ── 4. Post comments to GitHub ───────────────────────────────────
@@ -90,7 +86,7 @@ inline = [
 ]
 
 # Summary line for the review body
-summary = f"Claude reviewed this PR and left {len(inline)} inline comment(s)."
+summary = f"Claude reviewed this PR and left {len(inline)} inline comment(s)." if inline else "Claude reviewed this PR and found no issues. Great job, the code looks clean!"
 
 # Post the review
 response = requests.post(
