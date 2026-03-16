@@ -14,10 +14,16 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout calling repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Checkout shared-workflows
+        uses: actions/checkout@v4
+        with:
+          repository: LinaKrasko/shared-workflows
+          path: shared-workflows
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,4 +39,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: python code_review.py
+        run: python shared-workflows/code_review.py
