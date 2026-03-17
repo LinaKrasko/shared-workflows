@@ -159,6 +159,9 @@ If you find nothing worth commenting on, return: []""",
 # ── 3. Parse Claude's response ───────────────────────────────────
 raw = message.content[0].text.strip()
 
+if raw.startswith("```"):
+    raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+
 try:
     comments = json.loads(raw)
 except json.JSONDecodeError:
