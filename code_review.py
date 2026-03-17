@@ -26,7 +26,7 @@ client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 message = client.messages.create(
     model="claude-sonnet-4-6",
-    max_tokens=2000,
+    max_tokens=4000,
     system="""You are a senior code reviewer. Analyze the git diff provided and return a JSON array of review comments.
 
 Each comment must have exactly these fields:
@@ -50,12 +50,15 @@ Rules:
 # ── 3. Parse Claude's response ───────────────────────────────────
 raw = message.content[0].text.strip()
 
+if raw.startswith("```"):
+    raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+
 try:
     comments = json.loads(raw)
 except json.JSONDecodeError:
     print("Claude returned non-JSON response:")
     print(raw)
-    exit(0)
+    exit(1)
 
 print(f"Claude found {len(comments)} comment(s).")
 
@@ -70,18 +73,20 @@ headers = {
 }
 
 # Get the latest commit SHA on this PR
-pr_data = requests.get(
+pr_resp = requests.get(
     f"https://api.github.com/repos/{repo}/pulls/{pr_num}",
-    headers=headers
-).json()
-commit_sha = pr_data["head"]["sha"]
+    headers=headers,
+    timeout=30
+)
+pr_resp.raise_for_status()
+commit_sha = pr_resp.json()["head"]["sha"]
 
 # Build inline comments (only those with valid path + line)
 inline = [
     {
         "path": c["path"],
         "line": c["line"],
-        "body": f"**[{c['severity'].upper()}]** {c['body']}"
+        "body": f"**[{c.get('severity', 'note').upper()}]** {c['body']}"
     }
     for c in comments
     if isinstance(c.get("line"), int) and c.get("path")
