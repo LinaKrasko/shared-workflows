@@ -14,6 +14,7 @@ SKIP_FILES = [
     "*.min.js", "*.min.css",
     "__snapshots__",
     "**/migrations/*.py", "**/migrations/*.sql",
+    "*.md",
 ]
 
 def should_skip(filepath):
@@ -57,7 +58,7 @@ if not diff.strip():
 print(f"Diff size: {len(diff)} characters")
 
 # Truncate if too large
-MAX_DIFF_CHARS = 15000
+MAX_DIFF_CHARS = 100000
 if len(diff) > MAX_DIFF_CHARS:
     diff = diff[:MAX_DIFF_CHARS] + "\n\n[diff truncated]"
 
