@@ -30,9 +30,10 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: shared-workflows/requirements.txt
 
       - name: Install dependencies
-        run: pip install anthropic requests
+        run: pip install -r shared-workflows/requirements.txt
 
       - name: Run Claude review
         env:
