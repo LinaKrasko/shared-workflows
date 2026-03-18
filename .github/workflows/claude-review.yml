@@ -14,11 +14,6 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout calling repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Checkout shared-workflows
         uses: actions/checkout@v4
         with:
@@ -34,6 +29,14 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r shared-workflows/requirements.txt
+
+      - name: Checkout calling repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch main branch tip
+        run: git fetch origin main --depth=1
 
       - name: Run Claude review
         env:
